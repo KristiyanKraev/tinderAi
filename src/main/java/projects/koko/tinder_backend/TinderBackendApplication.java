@@ -41,9 +41,21 @@ public class TinderBackendApplication implements CommandLineRunner {
 				"foo.jpg",
 				"HTN"
 
+		);Profile profile2 = new Profile(
+				"2",
+				"Foo",
+				"Bar",
+				22,
+				"Bulgarian",
+				Gender.MALE,
+				"Gym dude",
+				"foo.jpg",
+				"HTN"
+
 		);
 
 		profileRepository.save(profile);
+		profileRepository.save(profile2);
 		profileRepository.findAll().forEach(System.out::println);
 
 		Conversation conversation = new Conversation(
