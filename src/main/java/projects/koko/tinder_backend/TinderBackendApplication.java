@@ -30,6 +30,8 @@ public class TinderBackendApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		profileRepository.deleteAll();
+		conversationRepository.deleteAll();
 		Profile profile = new Profile(
 				"1",
 				"Koko",
