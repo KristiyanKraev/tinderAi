@@ -3,16 +3,15 @@ package projects.koko.tinder_backend.profiles;
 import static projects.koko.tinder_backend.Utils.generateMyersBriggsTypes;
 import static projects.koko.tinder_backend.Utils.selfieTypes;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.micrometer.common.util.StringUtils;
-import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.ChatOptions;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.ollama.OllamaChatModel;
+import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Description;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.URI;
@@ -26,11 +25,12 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
+@Service
 public class ProfileCreationService {
 
     private static final String STABLE_DIFFUSION_URL = "https://fe97a6a77c5448ab52.gradio.live/sdapi/v1/txt2img";
 
-    private OllamaChatModel chatClient;
+    private ChatClient chatClient;
 
     private HttpClient httpClient;
 
@@ -46,14 +46,14 @@ public class ProfileCreationService {
     @Value("${tinderai.lookingForGender}")
     private String lookingForGender;
 
-    @Value("${tinderai.character.user}")
+    @Value("#{${tinderai.character.user}}")
     private Map<String, String> userProfileProperties;
 
     private ProfileRepository profileRepository;
 
 
-    public ProfileCreationService(OllamaChatModel chatClient, ProfileRepository profileRepository) {
-        this.chatClient = chatClient;
+    public ProfileCreationService(ChatClient.Builder builder, ProfileRepository profileRepository) {
+        this.chatClient = builder.build();
         this.profileRepository = profileRepository;
         this.httpClient = HttpClient.newHttpClient();
         this.stableDiffusionRequestBuilder = HttpRequest.newBuilder()
@@ -71,7 +71,6 @@ public class ProfileCreationService {
         }
 
         //Identify the age range, genders and ethnicities for generating profiles
-
         List<Integer> ages = new ArrayList<>();
         for (int i = 20; i <= 35; i++) {
             ages.add(i);
@@ -82,18 +81,82 @@ public class ProfileCreationService {
         String gender = this.lookingForGender;
 
         while (this.generatedProfiles.size() < numberOfProfiles) {
+
             int age = getRandomElement(ages);
             String ethnicity = getRandomElement(ethnicities);
             String personalityType = getRandomElement(myersBriggsPersonalityTypes);
 
-            String prompt = "Create a Tinder profile persona of an " + personalityType + " " + age + " year old"
-                    + ethnicity + " " + gender + " " + " including the first name, last name, Myers Briggs Personality type and " +
-                    "tinder bio. Save the profile using the saveProfile function";
-            System.out.println(prompt);
-            // Make a call to Ollama to generate a sample Tinder profile for these variables
-            ChatResponse response = chatClient.call(new Prompt(prompt, ChatOptions.builder().build()));
-//            System.out.println(response.getResult().getOutput());
+            String prompt = """
+                    You can call the following tool:
+                
+                    Tool name: saveProfile
+                    Arguments:
+                    - firstName (string)
+                    - lastName (string)
+                    - age (number)
+                    - ethnicity (string)
+                    - gender (string)
+                    - bio (string)
+                    - myersBriggsPersonalityType (string)
+                
+                    Create a Tinder profile persona of a %s %d year old %s %s.
+                
+                    RETURN ONLY VALID JSON.
+                    NO TEXT. NO MARKDOWN.
+                
+                    Format:
+                    {
+                      "tool": "saveProfile",
+                      "arguments": {
+                        "firstName": "",
+                        "lastName": "",
+                        "age": 0,
+                        "ethnicity": "",
+                        "gender": "",
+                        "bio": "",
+                        "myersBriggsPersonalityType": ""
+                      }
+                    }
+                    """.formatted(personalityType, age, ethnicity, gender);
+
+            // Call Ollama
+            String output = chatClient
+                    .prompt(prompt)
+                    .call()
+                    .content();
+
+            // Parse JSON
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root;
+
+            try {
+                root = mapper.readTree(output);
+            } catch (Exception e) {
+                System.out.println("Invalid JSON from model, retrying...");
+                continue;
+            }
+
+            //  Manual function calling
+            if ("saveProfile".equals(root.path("tool").asText())) {
+
+                JsonNode args = root.get("arguments");
+
+                Profile profile = new Profile(
+                        UUID.randomUUID().toString(),
+                        args.get("firstName").asText(),
+                        args.get("lastName").asText(),
+                        args.get("age").asInt(),
+                        args.get("ethnicity").asText(),
+                        Gender.valueOf(args.get("gender").asText().toUpperCase()),
+                        args.get("bio").asText(),
+                        null,
+                        args.get("myersBriggsPersonalityType").asText()
+                );
+
+                new ProfileCreationUtils().saveProfile().apply(profile);
+            }
         }
+
 
         //Save the values in a JSON file
         saveProfilesToJson(this.generatedProfiles);
@@ -222,16 +285,7 @@ public class ProfileCreationService {
         //Link the image name to the profile's image URL field
     }
 
-    @Bean
-    @Description("Save the Tinder Profile information")
-    public Function<Profile,Boolean> saveProfile(){
-        return (Profile profile) -> {
-            System.out.println("This is the function that we expect to be called by Spring AI by looking at the OpenAI response");
-            System.out.println(profile);
-            this.generatedProfiles.add(profile);
-            return true;
-        };
-    }
+
 
     public void saveProfilesToDB(){
         Gson gson = new Gson();
@@ -261,4 +315,13 @@ public class ProfileCreationService {
 
     }
 
+    class ProfileCreationUtils{
+        @Tool(description = "Save the Tinder Profile information")
+        public Function<Profile,Boolean> saveProfile(){
+            return ( profile) -> {
+                ProfileCreationService.this.generatedProfiles.add(profile);
+                return true;
+            };
+        }
+    }
 }
