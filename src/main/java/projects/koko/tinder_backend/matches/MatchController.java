@@ -15,6 +15,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/matches")
 public class MatchController {
+
     private final ProfileRepository profileRepository;
     private final ConversationRepository conversationRepository;
     private final MatchRepository matchRepository;
@@ -25,13 +26,11 @@ public class MatchController {
         this.matchRepository = matchRepository;
     }
 
-
-    public record CreateMatchRequest(String profileId){}
-
+    @CrossOrigin(origins = "*")
     @PostMapping
-    public Match createMatch(@RequestBody CreateMatchRequest request){
+    public Match createMatch(@RequestBody CreateMatchRequest request) {
         Profile profile = profileRepository.findById(request.profileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                "Unable to find Profile with Id: " +  request.profileId));
+                "Unable to find Profile with Id: " + request.profileId));
 
         //TODO: Make sure there are no existing conversations with this profile already
         Conversation conversation = new Conversation(
@@ -41,17 +40,22 @@ public class MatchController {
         );
         conversationRepository.save(conversation);
 
-        Match match =  new Match(
+        Match match = new Match(
                 UUID.randomUUID().toString(),
-                profile,conversation.id()
+                profile, conversation.id()
         );
         matchRepository.save(match);
         return match;
 
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping
-    public List<Match> getAllMatches(){
+    public List<Match> getAllMatches() {
         return matchRepository.findAll();
+    }
+
+    public record CreateMatchRequest(String profileId) {
+
     }
 }
