@@ -1,44 +1,48 @@
 import { User, MessageCircle, X, Heart } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
-const ProfileSelector = () => {
-  return (
+const fetchRandomProfile = async () => {
+  const response = await fetch("http://localhost:8080/api/profiles/random");
+  if (!response.ok) {
+    throw new Error("Unable to fetch profile");
+  }
+  return response.json();
+};
+
+const ProfileSelector = ({ profile, onSwipe }) =>
+  profile ? (
     <div className="rounded-lg overflow-hidden bg-white shadow-lg">
       <div className="relative">
-        <img src="http://localhost:8080/images/ffa9903a-9001-4c1d-a43c-eeee33433648.jpg" />
+        <img src={"http://localhost:8080/api/images/" + profile.imageUrl} />
         <div className="absolute bottom-0 left-0 right-0 text-white p-4 bg-gradient-to-t from-black  ">
-          <h2 className="text-3x1 font-bold">Foo Bar, 30</h2>
+          <h2 className="text-3x1 font-bold">
+            {profile.firstName} {profile.lastName} {profile.age}
+          </h2>
         </div>
       </div>
       <div className="p-4">
-        <p>
-          I am a software engineer looking for a job here, because LinkedIn
-          isn't being of any help
-        </p>
+        <p>{profile.bio}</p>
       </div>
 
       <div className="p-4 flex justify-center space-x-4">
         <button
-          onClick={() => {
-            console.log("Swipe left");
-          }}
+          onClick={() => onSwipe("left")}
           className="bg-red-500 rounded-full p-4 text-white hover:bg-red-700"
         >
           <X size={24} />
         </button>
         <button
-          onClick={() => {
-            console.log("Swipe right");
-          }}
+          onClick={() => onSwipe("right")}
           className="bg-green-500 rounded-full p-4 text-white hover:bg-green-700"
         >
           <Heart size={24} />
         </button>
       </div>
     </div>
+  ) : (
+    <div>Loading profile</div>
   );
-};
 
 const MatchesList = ({ onSelectMatch }) => (
   <div className="rounded-lg shadow-lg p-4">
@@ -119,11 +123,33 @@ const ChatScreen = () => {
   );
 };
 function App() {
+  const loadRandomProfile = async () => {
+    try {
+      const profile = await fetchRandomProfile();
+      setCurrentProfile(profile);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    loadRandomProfile();
+  }, {});
+
   const [currentScreen, setCurrentScreen] = useState("profile");
+  const [currentProfile, setCurrentProfile] = useState(null);
+
+  const onSwipe = (direction) => {
+    if (direction === "right") {
+      console.log("liked");
+    }
+    loadRandomProfile();
+  };
+
   const renderScreen = () => {
     switch (currentScreen) {
       case "profile":
-        return <ProfileSelector />;
+        return <ProfileSelector profile={currentProfile} onSwipe={onSwipe} />;
       case "matches":
         return <MatchesList onSelectMatch={() => setCurrentScreen("chat")} />;
       case "chat":
