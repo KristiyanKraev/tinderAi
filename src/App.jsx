@@ -40,7 +40,7 @@ const ProfileSelector = () => {
   );
 };
 
-const MatchesList = () => (
+const MatchesList = ({ onSelectMatch }) => (
   <div className="rounded-lg shadow-lg p-4">
     <h2 className="text-2xl font-bold mb-4">Matches</h2>
     <ul>
@@ -66,6 +66,7 @@ const MatchesList = () => (
               src={match.imageUrl}
               alt={`${match.firstName} ${match.lastName}`}
               className="w-16 h-16 rounded-full mr-3 object-cover"
+              onClick={onSelectMatch}
             />
 
             <span>
@@ -124,7 +125,7 @@ function App() {
       case "profile":
         return <ProfileSelector />;
       case "matches":
-        return <MatchesList />;
+        return <MatchesList onSelectMatch={() => setCurrentScreen("chat")} />;
       case "chat":
         return <ChatScreen />;
     }
