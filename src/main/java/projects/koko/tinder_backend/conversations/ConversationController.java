@@ -3,6 +3,7 @@ package projects.koko.tinder_backend.conversations;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import projects.koko.tinder_backend.profiles.Profile;
 import projects.koko.tinder_backend.profiles.ProfileRepository;
 
 import java.time.LocalDateTime;
@@ -15,10 +16,12 @@ public class ConversationController {
 
     private final ConversationRepository conversationRepository;
     private final ProfileRepository profileRepository;
+    private final ConversationService conversationService;
 
-    public ConversationController(ConversationRepository conversationRepository, ProfileRepository profileRepository) {
+    public ConversationController(ConversationRepository conversationRepository, ProfileRepository profileRepository, ConversationService conversationService) {
         this.conversationRepository = conversationRepository;
         this.profileRepository = profileRepository;
+        this.conversationService = conversationService;
     }
 
     @CrossOrigin(origins = "*")
@@ -49,8 +52,9 @@ public class ConversationController {
                                                  @RequestBody ChatMessage chatMessage) {
         Conversation conversation = conversationRepository.findById(conversationId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "Unable to find conversation with id " + conversationId));
-
-        profileRepository.findById(chatMessage.authorId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find profile with id " + chatMessage.authorId()));
+        String matchProfileId = conversation.profileId();
+        Profile profile = profileRepository.findById(matchProfileId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find profile with id " + matchProfileId));
+        Profile user = profileRepository.findById(chatMessage.authorId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find profile with id " + chatMessage.authorId()));
 
         //TODO: Need to validate that an author of the message happens to be only the profile associated
         //      with the message user
@@ -61,6 +65,8 @@ public class ConversationController {
                 LocalDateTime.now()
         );
         conversation.messages().add(messageWithTime);
+//        conversation.messages().add(llmMessage);
+        conversationService.generateProfileResponse(conversation, profile, user);
         conversationRepository.save(conversation);
         return conversation;
     }
