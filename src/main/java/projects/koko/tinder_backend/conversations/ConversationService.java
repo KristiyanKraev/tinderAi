@@ -26,6 +26,7 @@ public class ConversationService {
                 Pretend to be the provided person and respond to the conversation as if writing on Tinder.
                 Your bio is %s and your Myers Briggs personality is %s.
                 Respond in the role of this person only.
+                Only respond to the user's text. Do not use hashtags. Keep the responses brief.
                 """.formatted(profile.age(), profile.ethnicity(), profile.gender(), profile.firstName(), profile.lastName(),
                 user.age(), user.ethnicity(), user.gender(), user.firstName(), user.lastName(),
                 profile.bio(), profile.myersBriggsPersonalityType());

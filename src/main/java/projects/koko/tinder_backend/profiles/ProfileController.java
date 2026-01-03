@@ -18,4 +18,7 @@ public class ProfileController {
     public Profile getRandomProfile() {
         return profileRepository.getRandomProfile();
     }
+
+    // TODO add get profile by id because when you click again on the profile after opening a chat with them their profile will
+    //be opened also with picture bio and names and ages and stuff
 }
