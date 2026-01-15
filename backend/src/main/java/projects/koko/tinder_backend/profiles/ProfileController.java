@@ -23,7 +23,7 @@ public class ProfileController {
     public Profile getRandomProfile() {
         return profileRepository.getRandomProfile();
     }
-
+    @CrossOrigin(origins = "*")
     @GetMapping("/user")
     public Profile getUserProfile(){
         return profileService.getUserProfile();
