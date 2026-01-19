@@ -1,4 +1,4 @@
-import { User, MessageCircle, Home, X, Heart, Send } from "lucide-react";
+import { User, MessageCircle, Home, X, Heart, Send, Pen } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import "./App.css";
 
@@ -79,81 +79,23 @@ const UserProfile = ({ userProfile }) => (
           </dd>
         </div>
         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900">
-            Application for
-          </dt>
+          <dt className="text-sm/6 font-medium text-gray-900">Age</dt>
           <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Backend Developer
+            {userProfile.age} <Pen></Pen>
           </dd>
         </div>
         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900">Email address</dt>
+          <dt className="text-sm/6 font-medium text-gray-900">Biography</dt>
           <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            margotfoster@example.com
+            {userProfile.bio} <Pen></Pen>
           </dd>
         </div>
         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
           <dt className="text-sm/6 font-medium text-gray-900">
-            Salary expectation
+            Myers-Briggs Personality Type
           </dt>
           <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            $120,000
-          </dd>
-        </div>
-        <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900">About</dt>
-          <dd className="mt-1 text-sm/6 text-gray-700 sm:col-span-2 sm:mt-0">
-            Fugiat ipsum ipsum deserunt culpa aute sint do nostrud anim
-            incididunt cillum culpa consequat. Excepteur qui ipsum aliquip
-            consequat sint. Sit id mollit nulla mollit nostrud in ea officia
-            proident. Irure nostrud pariatur mollit ad adipisicing reprehenderit
-            deserunt qui eu.
-          </dd>
-        </div>
-        <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-          <dt className="text-sm/6 font-medium text-gray-900">Attachments</dt>
-          <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-            <ul
-              role="list"
-              className="divide-y divide-gray-100 rounded-md border border-gray-200"
-            >
-              <li className="flex items-center justify-between py-4 pr-5 pl-4 text-sm/6">
-                <div className="flex w-0 flex-1 items-center">
-                  <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                    <span className="truncate font-medium text-gray-900">
-                      resume_back_end_developer.pdf
-                    </span>
-                    <span className="shrink-0 text-gray-400">2.4mb</span>
-                  </div>
-                </div>
-                <div className="ml-4 shrink-0">
-                  <a
-                    href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Download
-                  </a>
-                </div>
-              </li>
-              <li className="flex items-center justify-between py-4 pr-5 pl-4 text-sm/6">
-                <div className="flex w-0 flex-1 items-center">
-                  <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                    <span className="truncate font-medium text-gray-900">
-                      coverletter_back_end_developer.pdf
-                    </span>
-                    <span className="shrink-0 text-gray-400">4.5mb</span>
-                  </div>
-                </div>
-                <div className="ml-4 shrink-0">
-                  <a
-                    href="#"
-                    className="font-medium text-indigo-600 hover:text-indigo-500"
-                  >
-                    Download
-                  </a>
-                </div>
-              </li>
-            </ul>
+            {userProfile.myersBriggsPersonalityType}
           </dd>
         </div>
       </dl>
