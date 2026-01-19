@@ -16,4 +16,9 @@ public class ProfileService {
         return profileRepository.findById("user").orElseThrow(() -> new ProfileNotFoundException("User profile not found"));
     }
 
+    // TODO
+    public Profile updateUserProfile(Profile profile){
+
+    }
+
 }
