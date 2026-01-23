@@ -1,13 +1,23 @@
 package projects.koko.tinder_backend.profiles;
 
-public record Profile (
-        String id,
-        String firstName,
-        String lastName,
-        Integer age,
-        String ethnicity,
-        Gender gender,
-        String bio,
-        String imageUrl,
-        String myersBriggsPersonalityType
-){}
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.data.annotation.Id;
+
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class Profile {
+    @Id
+    private String id;
+    private String firstName;
+    private String lastName;
+    private Integer age;
+    private String ethnicity;
+    private Gender gender;
+    private String bio;
+    private String imageUrl;
+    private String myersBriggsPersonalityType;
+}

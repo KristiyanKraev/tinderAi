@@ -174,7 +174,7 @@ public class ProfileCreationService {
             generatedProfiles.addAll(existingProfiles);
             List<Profile> profilesWithImages = new ArrayList<>();
             for (Profile profile : profiles) {
-                if (profile.imageUrl() == null || "".equals(profile.imageUrl())) {
+                if (profile.getImageUrl() == null || "".equals(profile.getImageUrl())) {
                     profile = generateProfileImage(profile);
                 }
                 profilesWithImages.add(profile);
@@ -189,17 +189,17 @@ public class ProfileCreationService {
     }
 
     private Profile generateProfileImage(Profile profile) {
-        String uuid = StringUtils.isBlank(profile.id()) ? UUID.randomUUID().toString() : profile.id();
+        String uuid = StringUtils.isBlank(profile.getId()) ? UUID.randomUUID().toString() : profile.getId();
         profile = new Profile(
                 uuid,
-                profile.firstName(),
-                profile.lastName(),
-                profile.age(),
-                profile.ethnicity(),
-                profile.gender(),
-                profile.bio(),
+                profile.getFirstName(),
+                profile.getLastName(),
+                profile.getAge(),
+                profile.getEthnicity(),
+                profile.getGender(),
+                profile.getBio(),
                 uuid + ".jpg",
-                profile.myersBriggsPersonalityType()
+                profile.getMyersBriggsPersonalityType()
         );
         String randomSelfieType = getRandomElement(selfieTypes());
 
@@ -212,12 +212,12 @@ public class ProfileCreationService {
                 ultrarealistic, best quality, masterpiece.
                 Bio - %s
                 """.formatted(
-                profile.age(),
-                profile.myersBriggsPersonalityType(),
-                profile.ethnicity(),
-                profile.gender(),
+                profile.getAge(),
+                profile.getMyersBriggsPersonalityType(),
+                profile.getEthnicity(),
+                profile.getGender(),
                 randomSelfieType,
-                profile.bio()
+                profile.getBio()
         );
 
         String negativePrompt = "multiple faces, lowres, text, error, cropped, worst quality, " +
@@ -237,9 +237,9 @@ public class ProfileCreationService {
         System.out.println("""
                 Creating image for %s\\{profile.firstName()} %s\\{profile.lastName()}(\\ %s{profile.ethnicity()
                 """.formatted(
-                profile.firstName(),
-                profile.lastName(),
-                profile.ethnicity()
+                profile.getFirstName(),
+                profile.getLastName(),
+                profile.getEthnicity()
 
         ));
 
@@ -264,7 +264,7 @@ public class ProfileCreationService {
             //Decode Base64 to binary
             byte[] imageBytes = Base64.getDecoder().decode(base64Image);
             String directoryPath = "src/main/resources/images/";
-            String filePath = directoryPath + profile.imageUrl();
+            String filePath = directoryPath + profile.getImageUrl();
             Path directory = Paths.get(directoryPath);
             if(!Files.exists(directory)){
                 try{

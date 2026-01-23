@@ -13,12 +13,8 @@ public interface ProfileMapper {
     ProfileResponse toProfileResponse(Profile profile);
 
     @Mapping(target="id", ignore=true)
-    @Mapping(target="createdAt", ignore=true)
-    @Mapping(target="updatedAt", ignore=true)
     Profile toProfileFromRequest(ProfileRequest request);
 
     @Mapping(target="id", ignore=true)
-    @Mapping(target="createdAt", ignore=true)
-    @Mapping(target="updatedAt", ignore=true)
     void updateProfileFromRequest(ProfileRequest request, @MappingTarget Profile profile);
 }

@@ -27,13 +27,13 @@ public class ConversationService {
                 Your bio is %s and your Myers Briggs personality is %s.
                 Respond in the role of this person only.
                 Only respond to the user's text. Do not use hashtags. Keep the responses brief.
-                """.formatted(profile.age(), profile.ethnicity(), profile.gender(), profile.firstName(), profile.lastName(),
-                user.age(), user.ethnicity(), user.gender(), user.firstName(), user.lastName(),
-                profile.bio(), profile.myersBriggsPersonalityType());
+                """.formatted(profile.getAge(), profile.getEthnicity(), profile.getGender(), profile.getFirstName(), profile.getLastName(),
+                user.getAge(), user.getEthnicity(), user.getGender(), user.getFirstName(), user.getLastName(),
+                profile.getBio(), profile.getMyersBriggsPersonalityType());
         SystemMessage systemMessage = new SystemMessage(systemMessageStr);
 
         List<? extends AbstractMessage> conversationMessages = conversation.messages().stream().map(message -> {
-            if (message.authorId().equals(profile.id())) {
+            if (message.authorId().equals(profile.getId())) {
                 return new AssistantMessage(message.messageText());
             } else {
                 return new UserMessage(message.messageText());
@@ -48,7 +48,7 @@ public class ConversationService {
 
         conversation.messages().add(new ChatMessage(
                 response.getResult().getOutput().getText(),
-                profile.id(),
+                profile.getId(),
                 LocalDateTime.now()
         ));
         System.out.println("This is the response from Ollama: " + response.getResult().getOutput().getText());

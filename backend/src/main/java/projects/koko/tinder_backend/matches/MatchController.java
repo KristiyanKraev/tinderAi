@@ -35,7 +35,7 @@ public class MatchController {
         //TODO: Make sure there are no existing conversations with this profile already
         Conversation conversation = new Conversation(
                 UUID.randomUUID().toString(),
-                profile.id(),
+                profile.getId(),
                 new ArrayList<>()
         );
         conversationRepository.save(conversation);
