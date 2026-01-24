@@ -2,6 +2,7 @@ package projects.koko.tinder_backend.profiles;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
@@ -9,6 +10,7 @@ import org.springframework.data.annotation.Id;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Profile {
     @Id
     private String id;
