@@ -1,4 +1,4 @@
-package projects.koko.tinder_backend.auth.services;
+package projects.koko.tinder_backend.auth.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService {
-
     @Autowired
     private JavaMailSender emailSender;
 
@@ -20,7 +19,6 @@ public class EmailService {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text, true);
-
         emailSender.send(message);
     }
 }

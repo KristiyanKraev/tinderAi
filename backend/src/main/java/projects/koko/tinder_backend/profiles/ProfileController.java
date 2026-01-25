@@ -64,5 +64,4 @@ public class ProfileController {
                    .body(Map.of("message","Profile not found with id: " + id));
        }
     }
-
 }

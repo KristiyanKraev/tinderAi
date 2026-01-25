@@ -1,4 +1,4 @@
-package projects.koko.tinder_backend.auth.services;
+package projects.koko.tinder_backend.auth.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

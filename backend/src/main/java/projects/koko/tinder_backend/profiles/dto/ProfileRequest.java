@@ -2,17 +2,16 @@ package projects.koko.tinder_backend.profiles.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import projects.koko.tinder_backend.profiles.Gender;
 
 @Data
 public class ProfileRequest {
-    @NotBlank(message = "First name is required")
+    @NotNull(message = "First name is required")
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotNull(message = "Last name is required")
     private String lastName;
 
     @NotNull(message = "Age is required")

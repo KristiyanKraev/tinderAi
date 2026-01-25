@@ -17,5 +17,4 @@ public class ProfileResponse {
     private String bio;
     private String imageUrl;
     private String myersBriggsPersonalityType;
-
 }

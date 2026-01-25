@@ -7,5 +7,4 @@ public record ChatMessage(
         String authorId,
         LocalDateTime messageTime
 ) {
-
 }

@@ -7,5 +7,4 @@ public record Conversation (
         String profileId,
         List<ChatMessage> messages
 ) {
-
 }
