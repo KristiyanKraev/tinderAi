@@ -5,17 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import projects.koko.tinder_backend.user.User;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "profiles")
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class Profile {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+public class Profile extends BaseProfile{
+
+    @OneToOne
+    @JoinColumn(name="user_id")
+    private User user; // null for ai profiles
 
     @Column(name = "first_name")
     private String firstName;
@@ -35,9 +38,28 @@ public class Profile {
     @Column(name = "bio")
     private String bio;
 
-    @Column(name = "imageUrl")
+    @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "MBP_Type")
+    @Column(name = "mbp_type")
     private String myersBriggsPersonalityType;
+
+    @Column(name = "is_ai")
+    private boolean isAi;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @Column(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    public Profile(){
+        this.isAi = true;
+    }
+
+    public Profile(User user){
+        this.user = user;
+        this.isAi = false;
+    }
 }

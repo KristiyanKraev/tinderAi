@@ -1,13 +1,12 @@
 package projects.koko.tinder_backend.user;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import projects.koko.tinder_backend.profiles.BaseProfile;
 import projects.koko.tinder_backend.profiles.Profile;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -19,11 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends Profile implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
-
+public class User extends BaseProfile implements UserDetails {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -33,6 +28,9 @@ public class User extends Profile implements UserDetails {
     private boolean enabled;
     private String verificationCode;
     private LocalDateTime verificationCodeExpiresAt;
+
+    @OneToOne(mappedBy="user")
+    private Profile profile;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
