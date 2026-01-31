@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import projects.koko.tinder_backend.profiles.BaseProfile;
 import projects.koko.tinder_backend.profiles.Profile;
 
 import java.time.LocalDateTime;
@@ -18,7 +17,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User extends BaseProfile implements UserDetails {
+public class User  implements UserDetails {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
@@ -29,7 +32,7 @@ public class User extends BaseProfile implements UserDetails {
     private String verificationCode;
     private LocalDateTime verificationCodeExpiresAt;
 
-    @OneToOne(mappedBy="user")
+    @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
     private Profile profile;
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import projects.koko.tinder_backend.conversations.ConversationRepository;
 import projects.koko.tinder_backend.matches.MatchRepository;
+import projects.koko.tinder_backend.profiles.Profile;
 import projects.koko.tinder_backend.profiles.ProfileCreationService;
 import projects.koko.tinder_backend.profiles.ProfileRepository;
 
@@ -13,15 +14,18 @@ import projects.koko.tinder_backend.profiles.ProfileRepository;
 
 public class TinderBackendApplication implements CommandLineRunner {
 
-    @Autowired
     private ProfileRepository profileRepository;
-    @Autowired
     private ConversationRepository conversationRepository;
-    @Autowired
     private MatchRepository matchRepository;
-    @Autowired
     private ProfileCreationService profileCreationService;
 
+    public TinderBackendApplication(ProfileRepository profileRepository, ConversationRepository conversationRepository,
+                                    MatchRepository matchRepository, ProfileCreationService profileCreationService){
+        this.profileRepository = profileRepository;
+        this.conversationRepository = conversationRepository;
+        this.matchRepository = matchRepository;
+        this.profileCreationService = profileCreationService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(TinderBackendApplication.class, args);
@@ -36,9 +40,9 @@ public class TinderBackendApplication implements CommandLineRunner {
 
     }
 
-    private void clearAllData() {
-        conversationRepository.deleteAll();
-        matchRepository.deleteAll();
-        profileRepository.deleteAll();
-    }
+//    private void clearAllData() {
+//        conversationRepository.deleteAll();
+//        matchRepository.deleteAll();
+//        profileRepository.deleteAll();
+//    }
 }
