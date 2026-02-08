@@ -36,10 +36,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
             ) throws ServletException, IOException {
+        final String requestURI = request.getRequestURI();
+
+        // Skip jwt check for authentication endpoints for now until I finish User impl
+        if (requestURI.startsWith("/api/auth/")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
-            filterChain.doFilter(request,response);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header");
             return;
         }
 
@@ -49,7 +57,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-            if(userEmail != null && authentication == null){
+            // Check if there's a valid email and either no authentication or anonymous authentication
+            if(userEmail != null && (authentication == null || "anonymousUser".equals(authentication.getPrincipal()))){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
                 if(jwtService.isTokenValid(jwt,userDetails)){

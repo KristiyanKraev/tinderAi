@@ -51,8 +51,8 @@ public class Profile{
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt = LocalDateTime.now();
+//    @Column(name = "created_at")
+//    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Profile(){
         this.isAi = true;

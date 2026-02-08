@@ -18,11 +18,11 @@ public interface MatchRepository  extends JpaRepository<Match, String> {
     @Query("SELECT m FROM Match m WHERE m.profileOne.id =:profileId OR m.profileTwo.id =:profileId")
     List<Match> findAllMatchesForProfile(@Param("profileId") String profileId);
 
-    boolean existsByProfileOneAndProfileTwo(String profileOneId, String profileTwoId);
-
-    default  boolean existsMatchBetween(String profileOneId, String profileTwoId){
-        return existsByProfileOneAndProfileTwo(profileOneId, profileTwoId) ||
-                existsByProfileOneAndProfileTwo(profileTwoId, profileOneId);
-    }
+//    boolean existsByProfileOneAndProfileTwo(String profileOneId, String profileTwoId);
+//
+//    default  boolean existsMatchBetween(String profileOneId, String profileTwoId){
+//        return existsByProfileOneAndProfileTwo(profileOneId, profileTwoId) ||
+//                existsByProfileOneAndProfileTwo(profileTwoId, profileOneId);
+//    }
 
 }

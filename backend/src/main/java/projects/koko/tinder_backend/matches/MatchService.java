@@ -39,10 +39,10 @@ public class MatchService {
         if(likeRepository.existsByLikerIdAndLikedId(likerId, likedId)){
             throw new RuntimeException("Like exists between liker: " + likerId + " and liked: " + likedId);
         }
-        // Check if a match already exists
-        if(matchRepository.existsMatchBetween(likerId, likedId)){
-            throw new RuntimeException("Match exists between profiles");
-        }
+//        // Check if a match already exists
+//        if(matchRepository.existsMatchBetween(likerId, likedId)){
+//            throw new RuntimeException("Match exists between profiles");
+//        }
         // Get the profiles
         Profile liker = profileRepository.findById(likerId).
                 orElseThrow(() -> new RuntimeException("Liker not found"));
@@ -91,15 +91,10 @@ public class MatchService {
         return matchRepository.findAllMatchesForProfile(profileId);
     }
 
-    /**
-     * Check if two profiles have matched
-     * @param profile1Id First profile ID
-     * @param profile2Id Second profile ID
-     * @return true if the profiles have matched, false otherwise
-     */
-    public boolean haveMatched(String profile1Id, String profile2Id) {
-        return matchRepository.existsMatchBetween(profile1Id, profile2Id);
-    }
+
+//    public boolean haveMatched(String profile1Id, String profile2Id) {
+//        return matchRepository.existsMatchBetween(profile1Id, profile2Id);
+//    }
 
     public void deleteMatchById(String matchId) {
         matchRepository.deleteById(matchId);

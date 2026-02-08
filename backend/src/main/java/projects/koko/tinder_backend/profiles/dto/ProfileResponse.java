@@ -25,5 +25,5 @@ public class ProfileResponse {
     private String myersBriggsPersonalityType;
     private boolean isAi;
     private boolean isActive;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }

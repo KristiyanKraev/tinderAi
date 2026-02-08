@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import projects.koko.tinder_backend.conversations.ConversationRepository;
+//import projects.koko.tinder_backend.conversations.ConversationRepository;
 import projects.koko.tinder_backend.matches.MatchRepository;
 import projects.koko.tinder_backend.profiles.Profile;
-import projects.koko.tinder_backend.profiles.ProfileCreationService;
+//import projects.koko.tinder_backend.profiles.ProfileCreationService;
 import projects.koko.tinder_backend.profiles.ProfileRepository;
 
 @SpringBootApplication
@@ -15,16 +15,16 @@ import projects.koko.tinder_backend.profiles.ProfileRepository;
 public class TinderBackendApplication implements CommandLineRunner {
 
     private ProfileRepository profileRepository;
-    private ConversationRepository conversationRepository;
+//    private ConversationRepository conversationRepository;
     private MatchRepository matchRepository;
-    private ProfileCreationService profileCreationService;
+//    private ProfileCreationService profileCreationService;
 
-    public TinderBackendApplication(ProfileRepository profileRepository, ConversationRepository conversationRepository,
-                                    MatchRepository matchRepository, ProfileCreationService profileCreationService){
+    public TinderBackendApplication(ProfileRepository profileRepository,
+                                    MatchRepository matchRepository){
         this.profileRepository = profileRepository;
-        this.conversationRepository = conversationRepository;
+//        this.conversationRepository = conversationRepository;
         this.matchRepository = matchRepository;
-        this.profileCreationService = profileCreationService;
+//        this.profileCreationService = profileCreationService;
     }
 
     public static void main(String[] args) {
@@ -36,7 +36,7 @@ public class TinderBackendApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
 //        profileCreationService.createProfiles(0);
 //        clearAllData();
-        profileCreationService.saveProfilesToDB();
+//        profileCreationService.saveProfilesToDB();
 
     }
 

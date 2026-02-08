@@ -43,5 +43,5 @@ public class ProfileRequest {
 
     private boolean isAi;
     private boolean isActive;
-    private LocalDateTime createdAt;
+//    private LocalDateTime createdAt;
 }
