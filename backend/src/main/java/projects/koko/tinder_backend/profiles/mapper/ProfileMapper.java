@@ -16,13 +16,11 @@ public interface ProfileMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "isAi", ignore = true)
     @Mapping(target = "isActive", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
     Profile toProfileFromRequest(ProfileRequest request);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "isAi", ignore = true)
     @Mapping(target = "isActive", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
     void updateProfileFromRequest(ProfileRequest request, @MappingTarget Profile profile);
 }

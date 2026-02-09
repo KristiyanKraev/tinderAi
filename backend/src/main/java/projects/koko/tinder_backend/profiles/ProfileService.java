@@ -1,9 +1,12 @@
 package projects.koko.tinder_backend.profiles;
 
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import projects.koko.tinder_backend.profiles.dto.ProfileRequest;
 import projects.koko.tinder_backend.profiles.dto.ProfileResponse;
 import projects.koko.tinder_backend.profiles.mapper.ProfileMapper;
+import projects.koko.tinder_backend.user.User;
+import projects.koko.tinder_backend.utils.ProfileExistsException;
 import projects.koko.tinder_backend.utils.ProfileNotFoundException;
 
 @Service
@@ -28,8 +31,19 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException("No profiles available "));
     }
 
-    public ProfileResponse createProfile(ProfileRequest request){
+    public ProfileResponse createProfile(ProfileRequest request, String userId){
+        // Check if a profile already exists for this user
+        profileRepository.findByUserId(userId).ifPresent(profile -> {
+            throw new ProfileExistsException("Profile already exists for this user");
+        });
+        
         Profile newProfile = profileMapper.toProfileFromRequest(request);
+        User user = new User();
+        user.setId(userId);
+        newProfile.setUser(user);
+        newProfile.setIsAi(false);
+        newProfile.setIsActive(true);
+
         Profile savedProfile = profileRepository.save(newProfile);
         return profileMapper.toProfileResponse(savedProfile);
     }
@@ -44,10 +58,15 @@ public class ProfileService {
                 .orElseThrow(() -> new ProfileNotFoundException("Profile not found with id : " + id));
     }
 
+    @Transactional
     public void deleteProfileById(String id){
-        if (!profileRepository.existsById(id)) {
-            throw new ProfileNotFoundException("Profile not found with id : " + id);
+        Profile profile = profileRepository.findById(id)
+                .orElseThrow(() -> new ProfileNotFoundException("Profile not found with id: " + id));
+
+        if(profile.getUser() != null){
+            User user = profile.getUser();
+            user.setProfile(null);
         }
-        profileRepository.deleteById(id);
+        profileRepository.delete(profile);
     }
 }

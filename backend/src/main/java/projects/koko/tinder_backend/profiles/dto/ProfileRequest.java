@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Data
 public class ProfileRequest {
 
-    private String userId;
+//    @NotBlank(message= "User id is required")
+//    private String userId;
 
     @NotBlank(message = "First name is required")
     private String firstName;
@@ -41,7 +42,7 @@ public class ProfileRequest {
 
     private String myersBriggsPersonalityType;
 
-    private boolean isAi;
-    private boolean isActive;
+    private boolean isAi = false;
+    private boolean isActive = true;
 //    private LocalDateTime createdAt;
 }

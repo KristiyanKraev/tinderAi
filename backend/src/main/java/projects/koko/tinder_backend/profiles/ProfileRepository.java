@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface ProfileRepository extends JpaRepository<Profile, String> {
     @Query("SELECT p FROM Profile p ORDER BY RANDOM() LIMIT 1")
     Optional<Profile> getRandomProfile();
+    
+    @Query("SELECT p FROM Profile p WHERE p.user.id = :userId")
+    Optional<Profile> findByUserId(String userId);
 }
